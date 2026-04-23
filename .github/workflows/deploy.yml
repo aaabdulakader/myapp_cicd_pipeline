@@ -22,10 +22,9 @@ jobs:
         run: mvn test
 
       - name: Build app
-        run: mvn clean package
+        run: mvn clean package -DskipTests
 
-      # If tests fail → everything stops here
-      - name: Ensure directories exist on EC2
+      - name: Ensure EC2 directories
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.EC2_HOST }}
@@ -42,11 +41,10 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
           key: ${{ secrets.EC2_KEY }}
-          source: "target/myapp-1.0.jar"
+          source: "target/*.jar"
           target: "/home/ubuntu/app/releases/app.jar"
-          debug: true
 
-      - name: Deploy on EC2
+      - name: Deploy
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.EC2_HOST }}
