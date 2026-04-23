@@ -10,7 +10,7 @@ public class App {
 
     @GetMapping("/")
     public String home() {
-        return "Hello from backend";
+        return "Hello from backend V2";
     }
 
     @GetMapping("/health")
