@@ -27,6 +27,18 @@ jobs:
       - name: Verify JAR exists
         run: ls -lah target/
 
+      - name: Clean stale app.jar directory
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+         host: ${{ secrets.EC2_HOST }}
+         username: ubuntu
+         key: ${{ secrets.EC2_KEY }}
+         script: |
+          if [ -d /home/ubuntu/app/releases/app.jar ]; then
+            echo "Removing stale app.jar directory from previous failed run"
+            rm -rf /home/ubuntu/app/releases/app.jar
+          fi
+
       - name: Ensure EC2 directories
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -45,7 +57,7 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_KEY }}
           source: "target/myapp-1.0.jar"
-          target: "/home/ubuntu/app/releases/app.jar"
+          target: "/home/ubuntu/app/releases/"
           overwrite: true
           debug: true
 
