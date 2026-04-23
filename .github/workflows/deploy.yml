@@ -41,7 +41,7 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
           key: ${{ secrets.EC2_KEY }}
-          source: "target/*.jar"
+          source: "target/myapp-1.0.jar"
           target: "/home/ubuntu/app/releases/app.jar"
 
       - name: Deploy
