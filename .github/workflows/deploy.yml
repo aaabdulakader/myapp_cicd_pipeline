@@ -24,6 +24,9 @@ jobs:
       - name: Build app
         run: mvn clean package -DskipTests
 
+      - name: Verify JAR exists
+        run: ls -lah target/
+
       - name: Ensure EC2 directories
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -43,6 +46,8 @@ jobs:
           key: ${{ secrets.EC2_KEY }}
           source: "target/myapp-1.0.jar"
           target: "/home/ubuntu/app/releases/app.jar"
+          overwrite: true
+          debug: true
 
       - name: Deploy
         uses: appleboy/ssh-action@v1.0.3
