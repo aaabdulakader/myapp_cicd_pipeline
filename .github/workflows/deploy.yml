@@ -18,13 +18,23 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - name: Build app
-        run: mvn clean package
-
       - name: Run tests
         run: mvn test
 
+      - name: Build app
+        run: mvn clean package
+
       # If tests fail → everything stops here
+      - name: Ensure directories exist on EC2
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_KEY }}
+          script: |
+            mkdir -p /home/ubuntu/app/releases
+            mkdir -p /home/ubuntu/app/current
+            mkdir -p /home/ubuntu/app/backup
 
       - name: Copy JAR to EC2
         uses: appleboy/scp-action@v0.1.4
@@ -32,8 +42,9 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
           key: ${{ secrets.EC2_KEY }}
-          source: "target/*.jar"
-          target: "~/app/releases/"
+          source: "target/myapp-1.0.jar"
+          target: "/home/ubuntu/app/releases/app.jar"
+          debug: true
 
       - name: Deploy on EC2
         uses: appleboy/ssh-action@v1.0.3
@@ -42,4 +53,4 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_KEY }}
           script: |
-            bash ~/deploy.sh
+            bash /home/ubuntu/deploy.sh
