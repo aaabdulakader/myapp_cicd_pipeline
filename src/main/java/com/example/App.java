@@ -15,8 +15,8 @@ public class App {
 
     @GetMapping("/health")
     public String health() {
-      //  return "OKK\n";
-      throw new RuntimeException("Simulated failure");
+      return "OK\n";
+      // throw new RuntimeException("Simulated failure");
     }
 
     public static void main(String[] args) {
