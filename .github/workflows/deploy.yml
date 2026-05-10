@@ -57,10 +57,9 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_KEY }}
           source: "target/myapp-1.0.jar"
-          target: "/home/ubuntu/app/releases/app.jar"
+          target: "/home/ubuntu/app/releases/"
           overwrite: true
-          debug: true
-
+      
       - name: Deploy
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -68,4 +67,6 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_KEY }}
           script: |
+            mv /home/ubuntu/app/releases/target/myapp-1.0.jar /home/ubuntu/app/releases/app.jar
+            rm -rf /home/ubuntu/app/releases/target
             bash /home/ubuntu/deploy.sh
