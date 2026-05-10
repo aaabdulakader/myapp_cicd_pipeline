@@ -57,7 +57,7 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_KEY }}
           source: "target/myapp-1.0.jar"
-          target: "/home/ubuntu/app/releases/"
+          target: "/home/ubuntu/app/releases/app.jar"
           overwrite: true
           debug: true
 
